@@ -5,6 +5,7 @@ import { Table, type Column } from "@/components/Table";
 import Pagination from "@/components/Pagination/Pagination";
 import type { Admin, BasicInfo, Detail } from "@/types/roles";
 import styles from "./EmployeeTable.module.scss";
+import EmployeeActions from "../EmployeeActions";
 
 type EmployeeTableProps = {
   columns: Column<Admin>[];
@@ -89,6 +90,7 @@ export default function EmployeeTable({
 
   return (
     <div className={styles["employee-table"]}>
+      <EmployeeActions />
       {loading && (
         <div className={styles["employee-table__overlay"]} aria-hidden="true">
           <span className={styles["employee-table__spinner"]} />
