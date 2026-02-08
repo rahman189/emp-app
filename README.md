@@ -2,6 +2,8 @@
 
 Next.js app with a wizard flow, employee table, and mock APIs served by `json-server`.
 
+Repository: https://github.com/rahman189/emp-app
+
 ## Prerequisites
 
 - Node.js `20.x` (recommended: latest Node 20 LTS)
