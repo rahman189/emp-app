@@ -1,2 +1,2 @@
-export { Table } from "./Table";
-export type { Column } from "./Table.types";
+export { Table } from './Table';
+export type { Column } from './Table.types';

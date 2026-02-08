@@ -14,7 +14,7 @@
     var(--surface);
   display: flex;
   justify-content: center;
-  font-family: "Space Grotesk", "Archivo", var(--font-geist-sans), sans-serif;
+  font-family: 'Space Grotesk', 'Archivo', var(--font-geist-sans), sans-serif;
   color: var(--ink);
   padding: 4rem 1.5rem 6rem;
 
@@ -47,7 +47,7 @@
     border: 1px solid var(--stroke);
     background: #fbfaf8;
     font-size: 0.875rem;
-    color: var(--ink-muted);
+    color: var(--ink);
 
     &:focus {
       outline: 2px solid rgba(244, 93, 72, 0.4);
@@ -68,7 +68,7 @@
     font-size: 0.875rem;
     resize: vertical;
     min-height: 6rem;
-    color: var(--ink-muted);
+    color: var(--ink);
 
     &:focus {
       outline: 2px solid rgba(244, 93, 72, 0.4);

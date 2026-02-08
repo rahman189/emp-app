@@ -1,18 +1,18 @@
-import type { ButtonHTMLAttributes } from "react";
-import styles from "./Button.module.scss";
+import type { ButtonHTMLAttributes } from 'react';
+import styles from './Button.module.scss';
 
 type ButtonProps = ButtonHTMLAttributes<HTMLButtonElement> & {
-  variant?: "primary" | "ghost" | "muted";
+  variant?: 'primary' | 'ghost' | 'muted';
 };
 
 export default function Button({
-  variant = "primary",
+  variant = 'primary',
   className,
   ...props
 }: ButtonProps) {
   const classes = [styles.button, styles[`button--${variant}`], className]
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   return <button className={classes} {...props} />;
 }

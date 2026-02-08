@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useEffect, useMemo, useRef, useState } from "react";
-import styles from "./AutocompleteSelect.module.scss";
+import { useEffect, useMemo, useRef, useState } from 'react';
+import styles from './AutocompleteSelect.module.scss';
 
 type AutocompleteSelectProps<T extends Record<string, any>> = {
   label?: string;
@@ -18,11 +18,11 @@ type AutocompleteSelectProps<T extends Record<string, any>> = {
 };
 
 export default function AutocompleteSelect<T extends Record<string, any>>({
-  label = "Search",
-  placeholder = "Type a name...",
+  label = 'Search',
+  placeholder = 'Type a name...',
   endpoint,
-  labelKey = "name",
-  queryParam = "name_like",
+  labelKey = 'name',
+  queryParam = 'name_like',
   onSelect,
   onValueChange,
   value,
@@ -30,7 +30,7 @@ export default function AutocompleteSelect<T extends Record<string, any>>({
   hasError = false,
   onBlur,
 }: AutocompleteSelectProps<T>) {
-  const [internalQuery, setInternalQuery] = useState("");
+  const [internalQuery, setInternalQuery] = useState('');
   const [loading, setLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<T[]>([]);
@@ -68,7 +68,7 @@ export default function AutocompleteSelect<T extends Record<string, any>>({
         const data = (await response.json()) as T[];
         setOptions(Array.isArray(data) ? data : []);
       } catch (error) {
-        if ((error as Error).name !== "AbortError") {
+        if ((error as Error).name !== 'AbortError') {
           setOptions([]);
         }
       } finally {
@@ -91,11 +91,11 @@ export default function AutocompleteSelect<T extends Record<string, any>>({
 
   return (
     <div className={styles.autocomplete}>
-      {label && <span className={styles["autocomplete__label"]}>{label}</span>}
-      <div className={styles["autocomplete__control"]}>
+      {label && <span className={styles['autocomplete__label']}>{label}</span>}
+      <div className={styles['autocomplete__control']}>
         <input
-          className={`${styles["autocomplete__input"]} ${
-            hasError ? styles["autocomplete__input--error"] : ""
+          className={`${styles['autocomplete__input']} ${
+            hasError ? styles['autocomplete__input--error'] : ''
           }`}
           value={query}
           onFocus={() => setOpen(true)}
@@ -106,33 +106,33 @@ export default function AutocompleteSelect<T extends Record<string, any>>({
           onChange={(event) => handleChange(event.target.value)}
           placeholder={placeholder}
         />
-        {loading && <span className={styles["autocomplete__spinner"]} />}
+        {loading && <span className={styles['autocomplete__spinner']} />}
       </div>
       {open && (
-        <ul className={styles["autocomplete__list"]} role="listbox">
+        <ul className={styles['autocomplete__list']} role="listbox">
           {!loading &&
             options.length > 0 &&
             options.map((option, index) => (
               <li key={`${String(option[labelKey] ?? index)}`} role="option">
                 <button
                   type="button"
-                  className={styles["autocomplete__item"]}
+                  className={styles['autocomplete__item']}
                   onMouseDown={() => {
                     skipQueryRef.current = true;
-                    handleChange(String(option[labelKey] ?? ""));
+                    handleChange(String(option[labelKey] ?? ''));
                     onSelect?.(option);
                     setOpen(false);
                   }}
                 >
-                  {String(option[labelKey] ?? "")}
+                  {String(option[labelKey] ?? '')}
                 </button>
               </li>
             ))}
           {loading && (
-            <li className={styles["autocomplete__empty"]}>Searching...</li>
+            <li className={styles['autocomplete__empty']}>Searching...</li>
           )}
           {!loading && options.length === 0 && (
-            <li className={styles["autocomplete__empty"]}>No matches</li>
+            <li className={styles['autocomplete__empty']}>No matches</li>
           )}
         </ul>
       )}

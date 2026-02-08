@@ -1,11 +1,11 @@
-import styles from "./Table.module.scss";
-import { TableProps } from "./Table.types";
+import styles from './Table.module.scss';
+import { TableProps } from './Table.types';
 
 export function Table<T>({
   columns,
   data,
   loading,
-  emptyMessage = "No data available",
+  emptyMessage = 'No data available',
   onRowClick,
 }: TableProps<T>) {
   const colSpan = Math.max(columns.length, 1);
@@ -15,7 +15,7 @@ export function Table<T>({
       <thead>
         <tr>
           {columns.map((col) => (
-            <th key={String(col.key)} className={styles["table__head-cell"]}>
+            <th key={String(col.key)} className={styles['table__head-cell']}>
               {col.header}
             </th>
           ))}
@@ -25,10 +25,10 @@ export function Table<T>({
       <tbody>
         {loading ? (
           <tr
-            className={`${styles["table__row"]} ${styles["table__row--empty"]}`}
+            className={`${styles['table__row']} ${styles['table__row--empty']}`}
           >
-            <td className={styles["table__cell"]} colSpan={colSpan}>
-              <span className={styles["table__state"]}>Loading...</span>
+            <td className={styles['table__cell']} colSpan={colSpan}>
+              <span className={styles['table__state']}>Loading...</span>
             </td>
           </tr>
         ) : data.length ? (
@@ -38,12 +38,12 @@ export function Table<T>({
               onClick={() => onRowClick?.(row)}
               className={
                 onRowClick
-                  ? `${styles["table__row"]} ${styles["table__row--clickable"]}`
-                  : styles["table__row"]
+                  ? `${styles['table__row']} ${styles['table__row--clickable']}`
+                  : styles['table__row']
               }
             >
               {columns.map((col) => (
-                <td key={String(col.key)} className={styles["table__cell"]}>
+                <td key={String(col.key)} className={styles['table__cell']}>
                   {col.render ? col.render(row) : (row as any)[col.key]}
                 </td>
               ))}
@@ -51,10 +51,10 @@ export function Table<T>({
           ))
         ) : (
           <tr
-            className={`${styles["table__row"]} ${styles["table__row--empty"]}`}
+            className={`${styles['table__row']} ${styles['table__row--empty']}`}
           >
-            <td className={styles["table__cell"]} colSpan={colSpan}>
-              <span className={styles["table__state"]}>{emptyMessage}</span>
+            <td className={styles['table__cell']} colSpan={colSpan}>
+              <span className={styles['table__state']}>{emptyMessage}</span>
             </td>
           </tr>
         )}

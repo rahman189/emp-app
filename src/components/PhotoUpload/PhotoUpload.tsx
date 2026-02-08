@@ -1,7 +1,7 @@
-"use client";
+'use client';
 
-import { useId, useState } from "react";
-import styles from "./PhotoUpload.module.scss";
+import { useId, useState } from 'react';
+import styles from './PhotoUpload.module.scss';
 
 type PhotoUploadProps = {
   label?: string;
@@ -10,7 +10,7 @@ type PhotoUploadProps = {
 };
 
 export default function PhotoUpload({
-  label = "Upload Photo",
+  label = 'Upload Photo',
   onChange,
 }: PhotoUploadProps) {
   const inputId = useId();
@@ -24,8 +24,8 @@ export default function PhotoUpload({
       return;
     }
 
-    if (!file.type.startsWith("image/")) {
-      setError("Please upload an image file.");
+    if (!file.type.startsWith('image/')) {
+      setError('Please upload an image file.');
       setPreview(null);
       onChange?.(null);
       return;
@@ -35,12 +35,12 @@ export default function PhotoUpload({
 
     const reader = new FileReader();
     reader.onload = () => {
-      const result = typeof reader.result === "string" ? reader.result : null;
+      const result = typeof reader.result === 'string' ? reader.result : null;
       setPreview(result);
       onChange?.(result);
     };
     reader.onerror = () => {
-      setError("Failed to read file.");
+      setError('Failed to read file.');
       setPreview(null);
       onChange?.(null);
     };
@@ -48,34 +48,34 @@ export default function PhotoUpload({
   }
 
   return (
-    <div className={styles["photo-upload"]}>
-      <label className={styles["photo-upload__label"]} htmlFor={inputId}>
+    <div className={styles['photo-upload']}>
+      <label className={styles['photo-upload__label']} htmlFor={inputId}>
         {label}
       </label>
-      <div className={styles["photo-upload__control"]}>
+      <div className={styles['photo-upload__control']}>
         <input
           id={inputId}
-          className={styles["photo-upload__input"]}
+          className={styles['photo-upload__input']}
           type="file"
           accept="image/*"
           onChange={(event) => handleFile(event.target.files?.[0])}
         />
-        <label className={styles["photo-upload__trigger"]} htmlFor={inputId}>
+        <label className={styles['photo-upload__trigger']} htmlFor={inputId}>
           {preview ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={preview}
               alt="Preview"
-              className={styles["photo-upload__preview"]}
+              className={styles['photo-upload__preview']}
             />
           ) : (
-            <div className={styles["photo-upload__placeholder"]}>
+            <div className={styles['photo-upload__placeholder']}>
               No photo selected
             </div>
           )}
         </label>
       </div>
-      {error && <span className={styles["photo-upload__error"]}>{error}</span>}
+      {error && <span className={styles['photo-upload__error']}>{error}</span>}
     </div>
   );
 }

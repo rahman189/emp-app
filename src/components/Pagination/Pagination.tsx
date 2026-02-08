@@ -1,5 +1,5 @@
-import Button from "../Button/Button";
-import styles from "./Pagination.module.scss";
+import Button from '../Button/Button';
+import styles from './Pagination.module.scss';
 
 type PaginationProps = {
   page: number;
@@ -24,15 +24,15 @@ export default function Pagination({
 
   return (
     <nav className={styles.pagination} aria-label="Pagination">
-      <div className={styles["pagination__meta"]}>
-        <span className={styles["pagination__count"]}>
+      <div className={styles['pagination__meta']}>
+        <span className={styles['pagination__count']}>
           Page {page} of {totalPages}
         </span>
         {onLimitChange && (
-          <label className={styles["pagination__limit"]}>
+          <label className={styles['pagination__limit']}>
             <span>Rows</span>
             <select
-              className={styles["pagination__select"]}
+              className={styles['pagination__select']}
               value={limit}
               onChange={(event) => onLimitChange(Number(event.target.value))}
             >
@@ -45,7 +45,7 @@ export default function Pagination({
           </label>
         )}
       </div>
-      <div className={styles["pagination__controls"]}>
+      <div className={styles['pagination__controls']}>
         <Button
           variant="ghost"
           onClick={() => onPageChange(page - 1)}

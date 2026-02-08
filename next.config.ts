@@ -1,4 +1,4 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next';
 
 const nextConfig: NextConfig = {
   /* config options here */
@@ -6,19 +6,19 @@ const nextConfig: NextConfig = {
   async rewrites() {
     return [
       {
-        source: "/basicInfo",
+        source: '/basicInfo',
         destination: `${process.env.NEXT_PUBLIC_BASIC}/basicInfo`,
       },
       {
-        source: "/departments",
+        source: '/departments',
         destination: `${process.env.NEXT_PUBLIC_BASIC}/departments`,
       },
       {
-        source: "/details",
+        source: '/details',
         destination: `${process.env.NEXT_PUBLIC_DETAIL}/details`,
       },
       {
-        source: "/locations",
+        source: '/locations',
         destination: `${process.env.NEXT_PUBLIC_DETAIL}/locations`,
       },
     ];

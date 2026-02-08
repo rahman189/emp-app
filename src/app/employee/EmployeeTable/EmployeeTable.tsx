@@ -1,24 +1,52 @@
-"use client";
+'use client';
 
-import { useEffect, useState } from "react";
-import { Table, type Column } from "@/components/Table";
-import Pagination from "@/components/Pagination/Pagination";
-import type { Admin, BasicInfo, Detail } from "@/types/roles";
-import styles from "./EmployeeTable.module.scss";
-import EmployeeActions from "../EmployeeActions";
+import Image from 'next/image';
+import { useEffect, useMemo, useState } from 'react';
+import { Table, type Column } from '@/components/Table';
+import Pagination from '@/components/Pagination/Pagination';
+import type { Admin, BasicInfo, Detail } from '@/types/roles';
+import styles from './EmployeeTable.module.scss';
+import EmployeeActions from '../EmployeeActions';
 
 type EmployeeTableProps = {
   columns: Column<Admin>[];
 };
 
-export default function EmployeeTable({
-  columns,
-}: EmployeeTableProps) {
+export default function EmployeeTable({ columns }: EmployeeTableProps) {
   const [page, setPage] = useState(1);
   const [limit, setLimit] = useState(10);
   const [data, setData] = useState<Admin[]>([]);
   const [totalCount, setTotalCount] = useState(0);
   const [loading, setLoading] = useState(false);
+  const resolvedColumns = useMemo<Column<Admin>[]>(() => {
+    return columns.map((column) => {
+      if (column.key !== 'photo') {
+        return column;
+      }
+
+      return {
+        ...column,
+        render: (row) => {
+          const src = row.photo?.trim();
+
+          if (!src) {
+            return '-';
+          }
+
+          return (
+            <Image
+              src={src}
+              alt={`${row.fullname ?? 'Employee'} photo`}
+              width={40}
+              height={40}
+              unoptimized
+              className={styles['employee-table__photo']}
+            />
+          );
+        },
+      };
+    });
+  }, [columns]);
 
   useEffect(() => {
     let active = true;
@@ -28,19 +56,19 @@ export default function EmployeeTable({
 
       try {
         const [basicInfoResponse, detailsResponse] = await Promise.all([
-          fetch("/basicInfo"),
+          fetch('/basicInfo'),
           fetch(`/details?_page=${page}&_limit=${limit}`),
         ]);
 
         if (!basicInfoResponse.ok || !detailsResponse.ok) {
           throw new Error(
-            `Failed to fetch data: basicInfo=${basicInfoResponse.status}, details=${detailsResponse.status}`,
+            `Failed to fetch data: basicInfo=${basicInfoResponse.status}, details=${detailsResponse.status}`
           );
         }
 
         const totalHeader =
-          detailsResponse.headers.get("X-Total-Count") ??
-          detailsResponse.headers.get("x-total-count");
+          detailsResponse.headers.get('X-Total-Count') ??
+          detailsResponse.headers.get('x-total-count');
         const total = totalHeader ? Number(totalHeader) : 0;
         const [basicInfo, details] = (await Promise.all([
           basicInfoResponse.json(),
@@ -50,7 +78,7 @@ export default function EmployeeTable({
         if (!active) return;
 
         const infoByEmployeeId = new Map(
-          basicInfo.map((info) => [info.employeeId, info]),
+          basicInfo.map((info) => [info.employeeId, info])
         );
 
         const merged = details.map((detail) => {
@@ -60,9 +88,9 @@ export default function EmployeeTable({
 
           return {
             ...detail,
-            fullname: info?.fullname ?? "-",
-            department: info?.department ?? "-",
-            role: info?.role ?? "-",
+            fullname: info?.fullname ?? '-',
+            department: info?.department ?? '-',
+            role: info?.role ?? '-',
           };
         });
 
@@ -89,14 +117,14 @@ export default function EmployeeTable({
   }, [page, limit]);
 
   return (
-    <div className={styles["employee-table"]}>
+    <div className={styles['employee-table']}>
       <EmployeeActions />
       {loading && (
-        <div className={styles["employee-table__overlay"]} aria-hidden="true">
-          <span className={styles["employee-table__spinner"]} />
+        <div className={styles['employee-table__overlay']} aria-hidden="true">
+          <span className={styles['employee-table__spinner']} />
         </div>
       )}
-      <Table columns={columns} data={data} loading={loading} />
+      <Table columns={resolvedColumns} data={data} loading={loading} />
       <Pagination
         page={page}
         limit={limit}
