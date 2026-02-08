@@ -24,4 +24,78 @@
     flex-direction: column;
     gap: 3rem;
   }
+
+  &__form {
+    display: grid;
+    gap: 1rem;
+  }
+
+  &__field {
+    display: grid;
+    gap: 0.5rem;
+  }
+
+  &__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  &__input {
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    border: 1px solid var(--stroke);
+    background: #fbfaf8;
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+
+    &:focus {
+      outline: 2px solid rgba(244, 93, 72, 0.4);
+      border-color: var(--accent);
+    }
+
+    &--error {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+  }
+
+  &__textarea {
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    border: 1px solid var(--stroke);
+    background: #fbfaf8;
+    font-size: 0.875rem;
+    resize: vertical;
+    min-height: 6rem;
+    color: var(--ink-muted);
+
+    &:focus {
+      outline: 2px solid rgba(244, 93, 72, 0.4);
+      border-color: var(--accent);
+    }
+  }
+
+  &__select {
+    border-radius: 0.75rem;
+    padding: 0.75rem 0.875rem;
+    border: 1px solid var(--stroke);
+    background: #fbfaf8;
+    font-size: 0.875rem;
+    color: var(--ink);
+  }
+
+  &__error {
+    color: var(--accent-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 0.75rem;
+  }
 }

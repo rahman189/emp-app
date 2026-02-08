@@ -1,0 +1,92 @@
+.autocomplete {
+  position: relative;
+  display: grid;
+  gap: 0.5rem;
+
+  &__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  &__control {
+    position: relative;
+  }
+
+  &__input {
+    width: 100%;
+    border-radius: 0.75rem;
+    padding: 0.75rem 2.5rem 0.75rem 0.875rem;
+    border: 1px solid var(--stroke);
+    background: #fbfaf8;
+    font-size: 0.875rem;
+    color: var(--ink-muted);
+
+    &:focus {
+      outline: 2px solid rgba(244, 93, 72, 0.4);
+      border-color: var(--accent);
+    }
+
+    &--error {
+      border-color: var(--accent);
+      background: var(--accent-soft);
+    }
+  }
+
+  &__spinner {
+    position: absolute;
+    top: 50%;
+    right: 0.75rem;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 999px;
+    border: 0.125rem solid rgba(17, 16, 20, 0.2);
+    border-top-color: var(--accent);
+    transform: translateY(-50%);
+    animation: autocomplete-spin 0.7s linear infinite;
+  }
+
+  &__list {
+    position: absolute;
+    top: calc(100% + 0.5rem);
+    left: 0;
+    right: 0;
+    background: var(--card);
+    border: 1px solid var(--stroke);
+    border-radius: 0.75rem;
+    box-shadow: var(--shadow);
+    padding: 0.5rem;
+    display: grid;
+    gap: 0.25rem;
+    z-index: 20;
+    list-style-type: none;
+  }
+
+  &__item {
+    width: 100%;
+    text-align: left;
+    border: none;
+    background: transparent;
+    padding: 0.5rem 0.75rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    cursor: pointer;
+    color: var(--ink);
+
+    &:hover {
+      background: #f5f1ea;
+    }
+  }
+
+  &__empty {
+    font-size: 0.8125rem;
+    color: var(--ink-muted);
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+@keyframes autocomplete-spin {
+  to {
+    transform: translateY(-50%) rotate(360deg);
+  }
+}

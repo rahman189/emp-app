@@ -1,0 +1,54 @@
+.photo-upload {
+  display: grid;
+  gap: 0.5rem;
+
+  &__label {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  &__control {
+    display: grid;
+    gap: 0.75rem;
+  }
+
+  &__input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+    width: 0;
+    height: 0;
+  }
+
+  &__trigger {
+    display: inline-grid;
+    cursor: pointer;
+  }
+
+  &__preview {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 0.75rem;
+    object-fit: cover;
+    border: 1px solid var(--stroke);
+  }
+
+  &__placeholder {
+    width: 8rem;
+    height: 8rem;
+    border-radius: 0.75rem;
+    border: 1px dashed var(--stroke);
+    display: grid;
+    place-items: center;
+    font-size: 0.75rem;
+    color: var(--ink-muted);
+    background: #fbfaf8;
+  }
+
+  &__error {
+    color: var(--accent-dark);
+    font-size: 0.75rem;
+    font-weight: 600;
+  }
+}
