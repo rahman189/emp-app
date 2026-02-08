@@ -1,0 +1,55 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_BASIC: http://mock-step1:4001
+        NEXT_PUBLIC_DETAIL: http://mock-step2:4002
+    environment:
+      NEXT_PUBLIC_BASIC: http://mock-step1:4001
+      NEXT_PUBLIC_DETAIL: http://mock-step2:4002
+      PORT: 3000
+    depends_on:
+      - mock-step1
+      - mock-step2
+    ports:
+      - '3000:3000'
+
+  mock-step1:
+    build:
+      context: .
+      dockerfile: Dockerfile.mock
+    command:
+      [
+        'json-server',
+        '--watch',
+        '/data/mocks/db-step1.json',
+        '--host',
+        '0.0.0.0',
+        '--port',
+        '4001',
+      ]
+    volumes:
+      - ./mocks:/data/mocks:ro
+    ports:
+      - '4001:4001'
+
+  mock-step2:
+    build:
+      context: .
+      dockerfile: Dockerfile.mock
+    command:
+      [
+        'json-server',
+        '--watch',
+        '/data/mocks/db-step2.json',
+        '--host',
+        '0.0.0.0',
+        '--port',
+        '4002',
+      ]
+    volumes:
+      - ./mocks:/data/mocks:ro
+    ports:
+      - '4002:4002'

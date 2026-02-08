@@ -1,0 +1,11 @@
+.git
+.gitignore
+.next
+node_modules
+pnpm-debug.log*
+npm-debug.log*
+yarn-error.log*
+coverage
+.vscode
+.idea
+.env.local

@@ -7,14 +7,12 @@ type PhotoUploadProps = {
   label?: string;
   value?: string | null;
   onChange?: (base64: string | null) => void;
-  onCancel?: () => void;
 };
 
 export default function PhotoUpload({
   label = 'Upload Photo',
   value,
   onChange,
-  onCancel,
 }: PhotoUploadProps) {
   const inputId = useId();
   const [preview, setPreview] = useState<string | null>(null);
@@ -64,7 +62,6 @@ export default function PhotoUpload({
           type="file"
           accept="image/*"
           onChange={(event) => handleFile(event.target.files?.[0])}
-          onCancel={() => onCancel?.()}
         />
         <label className={styles['photo-upload__trigger']} htmlFor={inputId}>
           {previewSrc ? (
