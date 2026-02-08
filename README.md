@@ -3,6 +3,7 @@
 Next.js app with a wizard flow, employee table, and mock APIs served by `json-server`.
 
 Repository: https://github.com/rahman189/emp-app
+Demo: https://emp-app-one.vercel.app/employee
 
 ## Prerequisites
 
