@@ -47,7 +47,6 @@ type Field =
 export default function WizardTypePage() {
   const params = useParams<{ type?: string }>();
   const typeParam = typeof params.type === "string" ? params.type : undefined;
-  const typeLabel = formatType(typeParam);
   const isAdmin = typeParam?.toLowerCase() === "admin";
   const steps: Step[] = [{ title: "Basic Info" }, { title: "Details" }];
 
@@ -106,7 +105,7 @@ export default function WizardTypePage() {
     };
 
     const nextErrorsStep2 = {
-      photo: (photoBase64 ?? "").trim() ? "" : "Full name is required.",
+      photo: (photoBase64 ?? "").trim() ? "" : "photo is required.",
       employmentType: employmentType.trim()
         ? ""
         : "Employment type is required.",
@@ -173,7 +172,7 @@ export default function WizardTypePage() {
     setErrorsStep2((prev) => {
       const next = { ...prev };
 
-      if (field === "fullName") {
+      if (field === "photo") {
         next.photo = (photoBase64 ?? "").trim() ? "" : "photo is required.";
       }
 
@@ -210,7 +209,7 @@ export default function WizardTypePage() {
         <Card title={isAdmin ? "Admin Form" : "Ops Form"}>
           {isAdmin && <Stepper steps={steps} currentStep={currentStep} />}
 
-          {currentStep === 1 && (
+          {currentStep === 1 && isAdmin && (
             <form className={styles["page__form"]}>
               <label className={styles["page__field"]}>
                 <span className={styles["page__label"]}>Full name</span>
@@ -343,7 +342,7 @@ export default function WizardTypePage() {
             </form>
           )}
 
-          {currentStep === 2 && (
+          {(currentStep === 2 || !isAdmin) && (
             <form className={styles["page__form"]}>
               <div className={styles["page__field"]}>
                 <PhotoUpload
@@ -426,13 +425,15 @@ export default function WizardTypePage() {
                 />
               </label>
               <div className={styles["page__actions"]}>
-                <Button
-                  variant="ghost"
-                  type="button"
-                  onClick={() => setCurrentStep(1)}
-                >
-                  Back
-                </Button>
+                {isAdmin && 
+                  <Button
+                    variant="ghost"
+                    type="button"
+                    onClick={() => setCurrentStep(1)}
+                  >
+                    Back
+                  </Button>
+                }
                 <Button
                   disabled={!isStepTwoValid}
                   className={styles["page__primary"]}

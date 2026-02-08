@@ -6,6 +6,7 @@ import styles from "./PhotoUpload.module.scss";
 type PhotoUploadProps = {
   label?: string;
   onChange?: (base64: string | null) => void;
+  onCancel?: () => void;
 };
 
 export default function PhotoUpload({
@@ -61,6 +62,7 @@ export default function PhotoUpload({
         />
         <label className={styles["photo-upload__trigger"]} htmlFor={inputId}>
           {preview ? (
+            // eslint-disable-next-line @next/next/no-img-element
             <img
               src={preview}
               alt="Preview"
