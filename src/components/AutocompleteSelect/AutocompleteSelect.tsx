@@ -3,7 +3,7 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import styles from './AutocompleteSelect.module.scss';
 
-type AutocompleteSelectProps<T extends Record<string, any>> = {
+type AutocompleteSelectProps<T extends Record<string, unknown>> = {
   label?: string;
   placeholder?: string;
   endpoint: string;
@@ -17,7 +17,7 @@ type AutocompleteSelectProps<T extends Record<string, any>> = {
   onBlur?: (value: string) => void;
 };
 
-export default function AutocompleteSelect<T extends Record<string, any>>({
+export default function AutocompleteSelect<T extends Record<string, unknown>>({
   label = 'Search',
   placeholder = 'Type a name...',
   endpoint,
