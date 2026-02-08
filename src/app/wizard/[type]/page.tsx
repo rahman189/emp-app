@@ -63,7 +63,6 @@ type Field =
   | 'email'
   | 'department'
   | 'role'
-  | 'photo'
   | 'employmentType'
   | 'officeLocation';
 
@@ -100,18 +99,17 @@ export default function WizardTypePage() {
   });
 
   const [touchedStep2, SettouchedStep2] = useState({
-    photo: false,
     employmentType: false,
     officeLocation: false,
   });
 
   const [errorsStep2, setErrorsStep2] = useState({
-    photo: '',
     employmentType: '',
     officeLocation: '',
   });
 
   const [showToast, setShowToast] = useState(false);
+  const [submitProgress, setSubmitProgress] = useState('');
   const [autosaveState, setAutosaveState] = useState<
     'idle' | 'saving' | 'saved' | 'error'
   >('idle');
@@ -136,7 +134,6 @@ export default function WizardTypePage() {
     };
 
     const nextErrorsStep2 = {
-      photo: (photoBase64 ?? '').trim() ? '' : 'photo is required.',
       employmentType: employmentType.trim()
         ? ''
         : 'Employment type is required.',
@@ -158,11 +155,17 @@ export default function WizardTypePage() {
         return Object.values(nextErrors).every((value) => !value);
       } else {
         setErrorsStep2(nextErrorsStep2);
-        return Object.values(nextErrorsStep2).every((value) => !value);
+        return (
+          (photoBase64 ?? '').trim().length > 0 &&
+          Object.values(nextErrorsStep2).every((value) => !value)
+        );
       }
     } else {
       setErrorsStep2(nextErrorsStep2);
-      return Object.values(nextErrorsStep2).every((value) => !value);
+      return (
+        (photoBase64 ?? '').trim().length > 0 &&
+        Object.values(nextErrorsStep2).every((value) => !value)
+      );
     }
   }
 
@@ -202,10 +205,6 @@ export default function WizardTypePage() {
   function validateStep2Field(field: Field) {
     setErrorsStep2((prev) => {
       const next = { ...prev };
-
-      if (field === 'photo') {
-        next.photo = (photoBase64 ?? '').trim() ? '' : 'photo is required.';
-      }
 
       if (field === 'employmentType') {
         next.employmentType = employmentType.trim()
@@ -354,11 +353,13 @@ export default function WizardTypePage() {
       return;
     }
 
+    setSubmitProgress(
+      isAdmin ? 'Submitting basic info...' : 'Submitting details...'
+    );
     setIsSubmitting(true);
 
     try {
       if (isAdmin) {
-        console.info('Submitting basic info');
         await postWithDelay('/basicInfo', {
           fullname: fullName.trim(),
           email: email.trim(),
@@ -366,10 +367,12 @@ export default function WizardTypePage() {
           role: role.trim(),
           employeeId: employeeId.trim(),
         });
-        console.info('Basic info saved');
+        setSubmitProgress('Basic info saved. Submitting details...');
       }
 
-      console.info('Submitting details');
+      if (!isAdmin) {
+        setSubmitProgress('Submitting details...');
+      }
       await postWithDelay('/details', {
         photo: photoBase64,
         employmentType: employmentType.trim(),
@@ -377,8 +380,7 @@ export default function WizardTypePage() {
         notes: notes.trim(),
         employeeId: employeeId.trim(),
       });
-      console.info('Details saved');
-      console.info('All data processed successfully!');
+      setSubmitProgress('All data saved.');
       const prefix = getPrefixEmployee(
         departmentVal?.name ?? department
       ).trim();
@@ -393,6 +395,7 @@ export default function WizardTypePage() {
       setShowToast(true);
     } catch (error) {
       console.error(error);
+      setSubmitProgress('Failed to save data.');
     } finally {
       setIsSubmitting(false);
     }
@@ -638,15 +641,24 @@ export default function WizardTypePage() {
                   </Button>
                 )}
                 <Button
-                  disabled={!isStepTwoValid || isSubmitting}
+                  disabled={
+                    !isStepTwoValid ||
+                    isSubmitting ||
+                    submitProgress === 'All data saved.'
+                  }
                   className={styles['page__primary']}
                   type="button"
                   onClick={handleSubmit}
                 >
-                  {isSubmitting ? 'Submitting...' : 'Submit'}
+                  {isSubmitting
+                    ? submitProgress || 'Submitting...'
+                    : submitProgress === 'All data saved.'
+                      ? 'All data saved'
+                      : 'Submit'}
                 </Button>
               </div>
               <p className={styles['page__meta']}>
+                {submitProgress && `${submitProgress} `}
                 {autosaveState === 'saving' && 'Saving draft...'}
                 {autosaveState === 'saved' &&
                   `Draft saved (${lastSavedAt || 'just now'})`}
