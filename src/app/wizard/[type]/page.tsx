@@ -1,7 +1,7 @@
 'use client';
 
-import { useMemo, useState } from 'react';
-import { useParams } from 'next/navigation';
+import { useEffect, useMemo, useRef, useState } from 'react';
+import { useParams, useRouter } from 'next/navigation';
 import Card from '@/components/Card';
 import Stepper from '@/components/Stepper/Stepper';
 import AutocompleteSelect from '@/components/AutocompleteSelect';
@@ -11,6 +11,10 @@ import PhotoUpload from '@/components/PhotoUpload';
 import styles from '@/app/page.module.scss';
 import Button from '@/components/Button/Button';
 import Toast from '@/components/Toast';
+
+const DRAFT_KEY_ADMIN = 'draft_admin';
+const DRAFT_KEY_OPS = 'draft_ops';
+const AUTOSAVE_IDLE_MS = 2000;
 
 function buildEmployeeId(department: string) {
   if (!department.trim()) return '';
@@ -38,6 +42,21 @@ function getPrefixEmployee(department: string) {
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
+
+type DraftPayload = {
+  currentStep: number;
+  fullName: string;
+  email: string;
+  department: string;
+  departmentVal: Option | null;
+  role: string;
+  employeeId: string;
+  photoBase64: string | null;
+  employmentType: string;
+  officeLocation: string;
+  officeLocationVal: Option | null;
+  notes: string;
+};
 
 type Field =
   | 'fullName'
@@ -93,6 +112,11 @@ export default function WizardTypePage() {
   });
 
   const [showToast, setShowToast] = useState(false);
+  const [autosaveState, setAutosaveState] = useState<
+    'idle' | 'saving' | 'saved' | 'error'
+  >('idle');
+  const [lastSavedAt, setLastSavedAt] = useState('');
+  const hasRestoredDraft = useRef(false);
 
   const roleOptions = useMemo(
     () => ['Ops', 'Admin', 'Engineer', 'Finance'],
@@ -210,6 +234,102 @@ export default function WizardTypePage() {
     employmentType.trim().length > 0 &&
     (officeLocationVal?.name ?? '').trim().length > 0;
 
+  const router = useRouter();
+  const draftKey = isAdmin ? DRAFT_KEY_ADMIN : DRAFT_KEY_OPS;
+
+  useEffect(() => {
+    hasRestoredDraft.current = false;
+
+    try {
+      const rawDraft = window.localStorage.getItem(draftKey);
+      if (!rawDraft) {
+        hasRestoredDraft.current = true;
+        return;
+      }
+
+      const draft = JSON.parse(rawDraft) as DraftPayload;
+      setCurrentStep(draft.currentStep || 1);
+      setFullName(draft.fullName || '');
+      setEmail(draft.email || '');
+      setDepartment(draft.department || '');
+      setDepartmentVal(draft.departmentVal ?? undefined);
+      setRole(draft.role || '');
+      setEmployeeId(draft.employeeId || '');
+      setPhotoBase64(draft.photoBase64 ?? null);
+      setEmploymentType(draft.employmentType || '');
+      setOfficeLocation(draft.officeLocation || '');
+      setOfficeLocationVal(draft.officeLocationVal ?? undefined);
+      setNotes(draft.notes || '');
+      setAutosaveState('saved');
+      setLastSavedAt('restored');
+    } catch (error) {
+      console.error(error);
+      window.localStorage.removeItem(draftKey);
+      setAutosaveState('error');
+    } finally {
+      hasRestoredDraft.current = true;
+    }
+  }, [draftKey]);
+
+  useEffect(() => {
+    if (!hasRestoredDraft.current || isSubmitting || showToast) {
+      return;
+    }
+
+    const draft: DraftPayload = {
+      currentStep,
+      fullName,
+      email,
+      department,
+      departmentVal: departmentVal ?? null,
+      role,
+      employeeId,
+      photoBase64,
+      employmentType,
+      officeLocation,
+      officeLocationVal: officeLocationVal ?? null,
+      notes,
+    };
+
+    const timer = window.setTimeout(() => {
+      try {
+        setAutosaveState('saving');
+        window.localStorage.setItem(draftKey, JSON.stringify(draft));
+        setAutosaveState('saved');
+        setLastSavedAt(
+          new Date().toLocaleTimeString([], {
+            hour: '2-digit',
+            minute: '2-digit',
+            second: '2-digit',
+          })
+        );
+      } catch (error) {
+        console.error(error);
+        setAutosaveState('error');
+      }
+    }, AUTOSAVE_IDLE_MS);
+
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [
+    currentStep,
+    fullName,
+    email,
+    department,
+    departmentVal,
+    role,
+    employeeId,
+    photoBase64,
+    employmentType,
+    officeLocation,
+    officeLocationVal,
+    notes,
+    draftKey,
+    isSubmitting,
+    showToast,
+  ]);
+
   async function postWithDelay(
     path: '/basicInfo' | '/details',
     payload: unknown
@@ -238,6 +358,7 @@ export default function WizardTypePage() {
 
     try {
       if (isAdmin) {
+        console.info('Submitting basic info');
         await postWithDelay('/basicInfo', {
           fullname: fullName.trim(),
           email: email.trim(),
@@ -245,8 +366,10 @@ export default function WizardTypePage() {
           role: role.trim(),
           employeeId: employeeId.trim(),
         });
+        console.info('Basic info saved');
       }
 
+      console.info('Submitting details');
       await postWithDelay('/details', {
         photo: photoBase64,
         employmentType: employmentType.trim(),
@@ -254,7 +377,8 @@ export default function WizardTypePage() {
         notes: notes.trim(),
         employeeId: employeeId.trim(),
       });
-
+      console.info('Details saved');
+      console.info('All data processed successfully!');
       const prefix = getPrefixEmployee(
         departmentVal?.name ?? department
       ).trim();
@@ -262,6 +386,9 @@ export default function WizardTypePage() {
       const nextSeq =
         Number(window.localStorage.getItem(storageKey) ?? '0') + 1;
       window.localStorage.setItem(storageKey, String(nextSeq));
+      window.localStorage.removeItem(draftKey);
+      setAutosaveState('idle');
+      setLastSavedAt('');
 
       setShowToast(true);
     } catch (error) {
@@ -407,6 +534,12 @@ export default function WizardTypePage() {
                   Continue
                 </Button>
               </div>
+              <p className={styles['page__meta']}>
+                {autosaveState === 'saving' && 'Saving draft...'}
+                {autosaveState === 'saved' &&
+                  `Draft saved (${lastSavedAt || 'just now'})`}
+                {autosaveState === 'error' && 'Failed to save draft'}
+              </p>
             </form>
           )}
 
@@ -415,6 +548,7 @@ export default function WizardTypePage() {
               <div className={styles['page__field']}>
                 <PhotoUpload
                   label="Upload photo"
+                  value={photoBase64}
                   onChange={(value) => setPhotoBase64(value)}
                 />
               </div>
@@ -512,6 +646,12 @@ export default function WizardTypePage() {
                   {isSubmitting ? 'Submitting...' : 'Submit'}
                 </Button>
               </div>
+              <p className={styles['page__meta']}>
+                {autosaveState === 'saving' && 'Saving draft...'}
+                {autosaveState === 'saved' &&
+                  `Draft saved (${lastSavedAt || 'just now'})`}
+                {autosaveState === 'error' && 'Failed to save draft'}
+              </p>
             </form>
           )}
         </Card>
@@ -523,9 +663,9 @@ export default function WizardTypePage() {
         message="Employee created successfully."
         open={showToast}
         autoCloseMs={3000}
-        onClose={(reason) => {
-          console.log(`Toast closed: ${reason}`);
+        onClose={() => {
           setShowToast(false);
+          router.push('/employee');
         }}
       />
     </div>

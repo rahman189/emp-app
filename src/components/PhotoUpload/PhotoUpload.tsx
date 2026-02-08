@@ -5,17 +5,22 @@ import styles from './PhotoUpload.module.scss';
 
 type PhotoUploadProps = {
   label?: string;
+  value?: string | null;
   onChange?: (base64: string | null) => void;
   onCancel?: () => void;
 };
 
 export default function PhotoUpload({
   label = 'Upload Photo',
+  value,
   onChange,
+  onCancel,
 }: PhotoUploadProps) {
   const inputId = useId();
   const [preview, setPreview] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const isControlled = value !== undefined;
+  const previewSrc = isControlled ? (value ?? null) : preview;
 
   async function handleFile(file?: File | null) {
     if (!file) {
@@ -59,12 +64,13 @@ export default function PhotoUpload({
           type="file"
           accept="image/*"
           onChange={(event) => handleFile(event.target.files?.[0])}
+          onCancel={() => onCancel?.()}
         />
         <label className={styles['photo-upload__trigger']} htmlFor={inputId}>
-          {preview ? (
+          {previewSrc ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img
-              src={preview}
+              src={previewSrc}
               alt="Preview"
               className={styles['photo-upload__preview']}
             />
