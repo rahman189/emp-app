@@ -1,6 +1,15 @@
 .table {
   width: 100%;
   border-collapse: collapse;
+  min-width: 42rem;
+
+  &__wrap {
+    width: 100%;
+    overflow-x: auto;
+    border-radius: 0.75rem;
+    border: 1px solid var(--stroke);
+    background: var(--card);
+  }
 
   &__head-cell,
   &__cell {
@@ -12,6 +21,11 @@
   &__head-cell {
     font-weight: 600;
     background: #fafafa;
+    white-space: nowrap;
+  }
+
+  &__cell {
+    vertical-align: middle;
   }
 
   &__row {
@@ -35,5 +49,17 @@
     padding: 1.5rem 0;
     text-align: center;
     color: #888;
+  }
+}
+
+@media (max-width: 700px) {
+  .table {
+    min-width: 34rem;
+
+    &__head-cell,
+    &__cell {
+      padding: 0.625rem;
+      font-size: 0.8125rem;
+    }
   }
 }

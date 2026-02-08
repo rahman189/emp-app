@@ -24,6 +24,7 @@
   &__trigger {
     display: inline-grid;
     cursor: pointer;
+    width: fit-content;
   }
 
   &__preview {
@@ -44,11 +45,28 @@
     font-size: 0.75rem;
     color: var(--ink-muted);
     background: #fbfaf8;
+    text-align: center;
+    padding: 0.5rem;
   }
 
   &__error {
     color: var(--accent-dark);
     font-size: 0.75rem;
     font-weight: 600;
+  }
+}
+
+@media (max-width: 700px) {
+  .photo-upload {
+    &__trigger {
+      width: 100%;
+      justify-items: start;
+    }
+
+    &__preview,
+    &__placeholder {
+      width: min(9rem, 55vw);
+      height: min(9rem, 55vw);
+    }
   }
 }

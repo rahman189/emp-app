@@ -25,6 +25,11 @@
     gap: 3rem;
   }
 
+  &__table {
+    width: 100%;
+    min-width: 0;
+  }
+
   &__form {
     display: grid;
     gap: 1rem;
@@ -33,6 +38,7 @@
   &__field {
     display: grid;
     gap: 0.5rem;
+    min-width: 0;
   }
 
   &__label {
@@ -83,6 +89,7 @@
     background: #fbfaf8;
     font-size: 0.875rem;
     color: var(--ink);
+    width: 100%;
   }
 
   &__error {
@@ -104,5 +111,44 @@
     font-size: 0.75rem;
     color: var(--ink-muted);
     min-height: 1rem;
+  }
+}
+
+@media (max-width: 1024px) {
+  .page {
+    padding: 2.5rem 1.25rem 4rem;
+
+    &__main {
+      gap: 2rem;
+    }
+  }
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 1.25rem 0.75rem 2.5rem;
+
+    &__main {
+      gap: 1.25rem;
+    }
+
+    &__form {
+      gap: 0.875rem;
+    }
+
+    &__actions {
+      flex-direction: column-reverse;
+      align-items: stretch;
+      gap: 0.625rem;
+
+      :global(button) {
+        width: 100%;
+      }
+    }
+
+    &__meta {
+      margin-top: 0;
+      line-height: 1.4;
+    }
   }
 }
