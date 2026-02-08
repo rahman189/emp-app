@@ -1,0 +1,30 @@
+.employee-table {
+  position: relative;
+  display: grid;
+  gap: 1rem;
+
+  &__overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.7);
+    display: grid;
+    place-items: center;
+    z-index: 2;
+    border-radius: 0.75rem;
+  }
+
+  &__spinner {
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    border: 0.1875rem solid rgba(17, 16, 20, 0.15);
+    border-top-color: var(--accent);
+    animation: employee-table-spin 0.8s linear infinite;
+  }
+}
+
+@keyframes employee-table-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,0 +1,39 @@
+.table {
+  width: 100%;
+  border-collapse: collapse;
+
+  &__head-cell,
+  &__cell {
+    padding: 0.75rem;
+    border-bottom: 1px solid #eaeaea;
+    text-align: left;
+  }
+
+  &__head-cell {
+    font-weight: 600;
+    background: #fafafa;
+  }
+
+  &__row {
+    background: transparent;
+
+    &--empty {
+      .table__cell {
+        text-align: center;
+        border-bottom: none;
+      }
+    }
+
+    &--clickable:hover {
+      background-color: #f5f5f5;
+      cursor: pointer;
+    }
+  }
+
+  &__state {
+    display: block;
+    padding: 1.5rem 0;
+    text-align: center;
+    color: #888;
+  }
+}

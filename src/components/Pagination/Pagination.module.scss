@@ -1,0 +1,49 @@
+.pagination {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 1rem;
+  justify-content: space-between;
+
+  &__meta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    color: var(--ink-muted);
+    font-size: 0.875rem;
+  }
+
+  &__count {
+    font-weight: 600;
+  }
+
+  &__limit {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.8125rem;
+  }
+
+  &__select {
+    border-radius: 999px;
+    border: 1px solid var(--stroke);
+    padding: 0.375rem 0.75rem;
+    background: #fff;
+    color: var(--ink-muted);
+    font-size: 0.8125rem;
+  }
+
+  &__controls {
+    display: flex;
+    align-items: center;
+    gap: 0.625rem;
+  }
+}
+
+@media (max-width: 700px) {
+  .pagination {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
